@@ -1,0 +1,15 @@
+nav{
+    background-color: #081947;
+}
+.table{
+    width: 90%;
+}
+.table thead{
+    border-top: 1px solid #a6a6a75e  ;
+}
+td button{
+    border: none;
+}
+button{
+    cursor: pointer;
+}

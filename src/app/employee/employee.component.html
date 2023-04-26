@@ -1,0 +1,144 @@
+<nav class="navbar navbar-dark mb-5">
+  <div class="container-fluid">
+    <h4 style="color:#fff">Manage Employees</h4>
+
+    <div class="d-flex">
+      <button class="btn btn-danger me-2"> <i class="fa-solid fa-circle-minus"></i> Delete </button>
+      <button (click)="clickAddemp()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"> <i
+          class="fa-solid fa-circle-plus"></i> Add New Employee </button>
+    </div>
+  </div>
+</nav>
+
+<table mat-table [dataSource]="dataSource" matSort  class="mat-elevation-z8">
+
+  <ng-container matColumnDef="empName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell *matCellDef="let employee"> {{employee.empName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="empEmail">
+    <th mat-header-cell *matHeaderCellDef > Email </th>
+    <td mat-cell *matCellDef="let employee"> {{employee.empEmail}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="empAddress">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
+    <td mat-cell *matCellDef="let employee"> {{employee.empAddress}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="empPhone">
+    <th mat-header-cell *matHeaderCellDef > Phone </th>
+    <td mat-cell *matCellDef="let employee"> {{employee.empPhone}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef > Action </th>
+    <td mat-cell *matCellDef="let employee">
+      <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="EditEmp(employee)"><i
+          class="fa-solid fa-pen text-warning"></i></button>
+
+      <button data-bs-toggle="modal" (click)="EmpId(employee)" data-bs-target="#deletemodel"><i class="fa-solid fa-trash text-danger"></i></button>
+
+      <!-- model For Delete -->
+      <div class="modal fade" id="deletemodel" aria-labelledby="deletmodelLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deletmodelLabel">Delete Employee</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this employee
+            </div>
+            <div class="modal-footer">
+              <button type="button"  data-bs-dismiss="modal" id="cancel">Close</button>
+              <button type="button"  class="btn btn-danger" (click)="DeleteEmp()">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let employee, columns: displayedColumns;"></tr>
+
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users">
+</mat-paginator>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="AddForm">
+          <div class="mb-3">
+            <label for="examplename" class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="empName" id="examplename">
+            <div class="alert alert-danger mt-1" role="alert" *ngIf="AddForm.get('empName')?.errors !=null &&
+            AddForm.get('empName')?.touched
+            ">
+              <p *ngIf="AddForm.get('empName')?.getError('required')"> Address is Required </p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleemail" class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="empEmail" id="exampleemail">
+            <div class="alert alert-danger mt-1" role="alert" *ngIf="AddForm.get('empEmail')?.errors !=null &&
+            AddForm.get('empEmail')?.touched
+            ">
+              <p *ngIf="AddForm.get('empEmail')?.getError('required')"> Email is Required </p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleaddress" class="form-label">Address</label>
+            <textarea class="form-control" formControlName='empAddress' id="exampleaddress"></textarea>
+            <div class="alert alert-danger mt-1" role="alert" *ngIf="AddForm.get('empAddress')?.errors !=null &&
+            AddForm.get('empAddress')?.touched
+            ">
+              <p *ngIf="AddForm.get('empAddress')?.getError('required')"> Address is Required </p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="examplephone" class="form-label">Phone</label>
+            <input type="text" class="form-control" formControlName="empPhone" id="examplephone">
+            <div class="alert alert-danger mt-1" role="alert" *ngIf="AddForm.get('empPhone')?.errors !=null &&
+            AddForm.get('empPhone')?.touched
+            ">
+              <p *ngIf="AddForm.get('empPhone')?.getError('required')"> Phone Is Required</p>
+              <p *ngIf="AddForm.get('empPhone')?.getError('pattern')"> Phone should containe 11 number</p>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+        <button type="button" [disabled]="AddForm.invalid" *ngIf="showAdd" class="btn btn-success"
+          (click)="addEmployeeForm()">Add</button>
+        <button type="button" *ngIf="showUpdate" class="btn btn-success" (click)="updateEmp()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #test>
+  <div class="m-auto text-center">
+    <h1 class="text-warning">NO EMPLOYEES Found </h1>
+  </div>
+</ng-template>
