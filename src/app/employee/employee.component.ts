@@ -1,9 +1,8 @@
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiemployeeService } from '../apiemployee.service';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort}  from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 export interface userData {
@@ -20,13 +19,13 @@ export interface userData {
 })
 export class EmployeeComponent implements OnInit {
 
+  constructor(private _ApiEmploy: ApiemployeeService) { }
+
   displayedColumns: string[] = ["empName", "empEmail", "empAddress", "empPhone", "action"]
-
   dataSource !: MatTableDataSource<userData>
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
   @ViewChild(MatSort) sort!: MatSort;
+
 
   AddForm: FormGroup = new FormGroup({
     empId: new FormControl(null),
@@ -35,16 +34,29 @@ export class EmployeeComponent implements OnInit {
     empAddress: new FormControl(null, [Validators.required]),
     empPhone: new FormControl(null, [Validators.required, Validators.pattern(`^(010|012|015|011)[0-9]{8}$`)])
   })
+
   error: string = '';
   DisplayEmp: any[] = [];
   showAdd!: boolean;
   showUpdate!: boolean;
+  employeeId: number = 0
+  hiddenElement!: boolean;
+  showOverlay:boolean = true;
+
   clickAddemp() {
     this.AddForm.reset();
     this.showAdd = true;
     this.showUpdate = false;
   }
-  constructor(private _ApiEmploy: ApiemployeeService) { }
+
+  checkLength() {
+    if (this.DisplayEmp.length > 0) {
+      this.hiddenElement = true;
+    }
+    else {
+      this.hiddenElement = false;
+    }
+  }
 
   addEmployeeForm() {
     this._ApiEmploy.AddEmployee(this.AddForm.value).subscribe(
@@ -55,11 +67,14 @@ export class EmployeeComponent implements OnInit {
         this.GetAllEmployees()
         close?.click()
       })
-
   }
+
   GetAllEmployees() {
     this._ApiEmploy.DisplayAllEmployees().subscribe(
       res => {
+        if (res) {
+          this.showOverlay = false;
+        }
         this.DisplayEmp = res;
         console.log(this.AddForm)
         this.dataSource = new MatTableDataSource(this.DisplayEmp)
@@ -72,12 +87,10 @@ export class EmployeeComponent implements OnInit {
     this._ApiEmploy.getEmpId(employee.empId).subscribe(
       res => {
         console.log(employee.empId)
-        this.employeeId =employee.empId
+        this.employeeId = employee.empId
       }
     )
   }
-
-  employeeId : number= 0
 
   DeleteEmp() {
     this._ApiEmploy.DeleteeEmployeeApi(this.employeeId).subscribe(
@@ -112,7 +125,7 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetAllEmployees()
-  
   }
-
 }
+
+

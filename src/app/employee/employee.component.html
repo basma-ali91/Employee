@@ -1,3 +1,8 @@
+
+<div class="my-overlay" *ngIf="showOverlay">
+  <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+</div>
+
 <nav class="navbar navbar-dark mb-5">
   <div class="container-fluid">
     <h4 style="color:#fff">Manage Employees</h4>
@@ -10,7 +15,8 @@
   </div>
 </nav>
 
-<table mat-table [dataSource]="dataSource" matSort  class="mat-elevation-z8">
+<div [hidden]="DisplayEmp.length <=0"  class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort [hidden]=" checkLength()" >
 
   <ng-container matColumnDef="empName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
@@ -69,6 +75,7 @@
 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users">
 </mat-paginator>
 
+</div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -137,8 +144,7 @@
 
 
 
-<ng-template #test>
-  <div class="m-auto text-center">
-    <h1 class="text-warning">NO EMPLOYEES Found </h1>
+
+  <div class="m-auto text-center" >
+    <h1 class="text-warning" [hidden]="hiddenElement">NO EMPLOYEES Found </h1>
   </div>
-</ng-template>
