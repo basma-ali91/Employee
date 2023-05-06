@@ -1,4 +1,3 @@
-
 <div class="my-overlay" *ngIf="showOverlay">
   <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 </div>
@@ -6,9 +5,10 @@
 <nav class="navbar navbar-dark mb-5">
   <div class="container-fluid">
     <h4 style="color:#fff">Manage Employees</h4>
+    
 
     <div class="d-flex">
-      <button class="btn btn-danger me-2"> <i class="fa-solid fa-circle-minus"></i> Delete </button>
+      <button class="btn btn-danger me-2" (click)="DeleteEmp()"> <i class="fa-solid fa-circle-minus"></i> Delete </button>
       <button (click)="clickAddemp()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"> <i
           class="fa-solid fa-circle-plus"></i> Add New Employee </button>
     </div>
@@ -18,6 +18,10 @@
 <div [hidden]="DisplayEmp.length <=0"  class="mat-elevation-z8">
 <table mat-table [dataSource]="dataSource" matSort [hidden]=" checkLength()" >
 
+   <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef ></th>
+    <td mat-cell *matCellDef="let employee" (click)="EmpId(employee)"> <input type="checkbox" name="" id="checked"> </td>
+  </ng-container>
   <ng-container matColumnDef="empName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
     <td mat-cell *matCellDef="let employee"> {{employee.empName}} </td>
@@ -94,7 +98,8 @@
             <div class="alert alert-danger mt-1" role="alert" *ngIf="AddForm.get('empName')?.errors !=null &&
             AddForm.get('empName')?.touched
             ">
-              <p *ngIf="AddForm.get('empName')?.getError('required')"> Address is Required </p>
+              <p *ngIf="AddForm.get('empName')?.getError('required')"> Name is Required </p>
+
             </div>
           </div>
 
@@ -105,6 +110,7 @@
             AddForm.get('empEmail')?.touched
             ">
               <p *ngIf="AddForm.get('empEmail')?.getError('required')"> Email is Required </p>
+              <p *ngIf="AddForm.get('empEmail')?.getError('email')"> Email is wrong </p>
             </div>
           </div>
 

@@ -19,7 +19,7 @@ export class ApiemployeeService {
     return this._Httpclient.get(`http://task.soft-zone.net/api/Employees/getAllEmployees`)
   }
 
-  DeleteeEmployeeApi(emp_id:number):Observable<any>{
+  DeleteeEmployeeApi(emp_id:any):Observable<any>{
     return this._Httpclient.get(`http://task.soft-zone.net/api/Employees/deleteEmpByID/${emp_id}`)
   }
   

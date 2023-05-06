@@ -21,7 +21,7 @@ export class EmployeeComponent implements OnInit {
 
   constructor(private _ApiEmploy: ApiemployeeService) { }
 
-  displayedColumns: string[] = ["empName", "empEmail", "empAddress", "empPhone", "action"]
+  displayedColumns: string[] = ["select","empName", "empEmail", "empAddress", "empPhone", "action"]
   dataSource !: MatTableDataSource<userData>
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -39,7 +39,7 @@ export class EmployeeComponent implements OnInit {
   DisplayEmp: any[] = [];
   showAdd!: boolean;
   showUpdate!: boolean;
-  employeeId: number = 0
+  employeeId: any[] = []
   hiddenElement!: boolean;
   showOverlay:boolean = true;
 
@@ -86,20 +86,29 @@ export class EmployeeComponent implements OnInit {
   EmpId(employee: any) {
     this._ApiEmploy.getEmpId(employee.empId).subscribe(
       res => {
-        console.log(employee.empId)
-        this.employeeId = employee.empId
+        // this.employeeId=employee.empId
+         this.employeeId.push(employee.empId)
+         console.log(this.employeeId)
       }
     )
   }
 
+  
+ 
   DeleteEmp() {
-    this._ApiEmploy.DeleteeEmployeeApi(this.employeeId).subscribe(
-      res => {
-        let cancel = document.getElementById("cancel");
-        cancel?.click()
-        this.GetAllEmployees()
-      }
-    )
+         for (let index = 0; index < this.employeeId.length; index++) {
+           this._ApiEmploy.DeleteeEmployeeApi(this.employeeId[index]).subscribe(
+          res => {
+            let cancel = document.getElementById("cancel");
+            cancel?.click()
+             this.GetAllEmployees();
+
+
+             this.employeeId.shift();
+           console.log(`delete${index}`)
+          }
+        )
+         }
   }
 
   EditEmp(employee: any) {

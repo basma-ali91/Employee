@@ -17,13 +17,14 @@
 .my-overlay i.fa.fa-spinner.fa-spin, .spinner-big {
     font-size: 100px !important;
 }
+
 nav{
     background-color: #081947;
 }
-.table{
+table{
     width: 90%;
 }
-.table thead{
+table th{
     border-top: 1px solid #a6a6a75e  ;
 }
 td button{
@@ -31,4 +32,18 @@ td button{
 }
 button{
     cursor: pointer;
+}
+
+
+
+@media screen and (max-width:768px) {
+body{
+    font-size: .5rem;
+}
+.mat-mdc-table {
+     table-layout: fixed;
+}
+.mdc-data-table__cell {
+     padding: 0 0 0 16px
+}
 }
